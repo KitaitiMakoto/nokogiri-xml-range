@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'nokogiri'
 
+  gem.add_development_dependency 'test-unit', '~> 3'
+  gem.add_development_dependency 'test-unit-notify'
   gem.add_development_dependency 'rubygems-tasks', '~> 0.2'
   gem.add_development_dependency 'yard', '~> 0.8'
 end
