@@ -24,4 +24,4 @@ TODO: Description
 
 Copyright (c) 2015 KITAITI Makoto
 
-See {file:LICENSE.txt} for details.
+See {file:COPYING.txt} for details.
