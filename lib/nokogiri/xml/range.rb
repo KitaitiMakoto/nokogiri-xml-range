@@ -7,6 +7,8 @@ using Nokogiri::XML::Range::Extension
 class Nokogiri::XML::Range
   class << self
     def compare_boundary_points(node1, offset1, node2, offset2)
+      return unless node1.document == node2.document
+
       case node1 <=> node2
       when 0
         offset1 <=> offset2
