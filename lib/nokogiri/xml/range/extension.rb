@@ -1,7 +1,7 @@
 module Nokogiri::XML
   class Range
     module Extension
-      refine Nokogiri::XML::Node do
+      refine Node do
         def ancestors_to(node)
           nodes = NodeSet.new(document)
           current = self
