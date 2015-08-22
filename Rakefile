@@ -3,6 +3,8 @@
 require 'rubygems'
 require 'rake'
 
+task :default => :test
+
 begin
   gem 'rubygems-tasks', '~> 0.2'
   require 'rubygems/tasks'
