@@ -21,4 +21,18 @@ class TestNokogiriXMLRange < Test::Unit::TestCase
     assert_equal 1, Nokogiri::XML::Range.compare_points(doc.root, 2, child1, 1)
     assert_equal -1, Nokogiri::XML::Range.compare_points(child1, 0, child2, 3)
   end
+
+  def test_contain?
+    doc = Nokogiri.XML(<<EOX)
+<root>
+  <child>child 1</child>
+  <child>child 2</child>
+</root>
+EOX
+    child1 = doc.search('child')[0]
+    child2 = doc.search('child')[1]
+
+    assert_true Nokogiri::XML::Range.new(doc.root, 0, child2, 0).contain?(child1)
+    assert_false Nokogiri::XML::Range.new(doc.root, 0, child1, 1).contain?(child2)
+  end
 end
