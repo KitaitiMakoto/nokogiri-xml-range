@@ -62,6 +62,8 @@ class Nokogiri::XML::Range
   end
 
   def collapsed?
+    @start_offset == @end_offset and
+      @start_container == @end_container
   end
 
   def select_node(node)
