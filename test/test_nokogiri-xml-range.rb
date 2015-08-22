@@ -47,4 +47,16 @@ EOX
   def test_common_ancestor_container
     assert_equal @parent, Nokogiri::XML::Range.new(@child1, 0, @child2, 0).common_ancestor_container
   end
+
+  def test_set_boundary_point
+    range1 = Nokogiri::XML::Range.new(@child1, 0, @child2, 0)
+    range2 = range1.dup
+
+    range1.set_start @parent, 1
+    assert_equal [@parent, 1], range1.start_point
+
+    range2.set_end @parent, 1
+    assert_equal [@parent, 1], range2.end_point
+    assert_equal [@parent, 1], range2.start_point
+  end
 end
