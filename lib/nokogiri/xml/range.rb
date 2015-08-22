@@ -1,5 +1,8 @@
 require 'nokogiri/xml/range/version'
 require 'nokogiri'
+require 'nokogiri/xml/range/extension'
+
+using Nokogiri::XML::Range::Extension
 
 class Nokogiri::XML::Range
   class << self
@@ -10,13 +13,9 @@ class Nokogiri::XML::Range
       when 1
         compare_boundary_points(node2, offset2, node1, offset1) * -1
       else
-        if node2.ancestors.include?(node1) # not need to get all ancestors
-          child = node2
-          children = node1.children
-          until children.include? child
-            child = child.parent
-          end
-          if children.index(child) < offset1
+        ancestors = node2.ancestors_to(node1) # nil or [node1, child of node1, ..., parent of node2, node2]
+        if ancestors
+          if node1.children.index(ancestors[1]) < offset1
             1
           else
             -1
