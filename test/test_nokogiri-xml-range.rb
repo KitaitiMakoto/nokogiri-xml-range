@@ -32,20 +32,20 @@ EOX
     assert_equal -1, Nokogiri::XML::Range.compare_points(@child1, 0, @child2, 3)
   end
 
-  def test_contain?
-    assert_true Nokogiri::XML::Range.new(@doc.root, 0, @child2, 0).contain?(@child1)
-    assert_false Nokogiri::XML::Range.new(@doc.root, 0, @child1, 1).contain?(@child2)
+  def test_contain_node?
+    assert_true Nokogiri::XML::Range.new(@doc.root, 0, @child2, 0).contain_node?(@child1)
+    assert_false Nokogiri::XML::Range.new(@doc.root, 0, @child1, 1).contain_node?(@child2)
   end
 
-  def test_partially_contain?
-    assert_false Nokogiri::XML::Range.new(@root, 0, @child1, 0).partially_contain?(@child2)
-    assert_false Nokogiri::XML::Range.new(@child1, 0, @child2, 0).partially_contain?(@root)
-    assert_false Nokogiri::XML::Range.new(@child1, 0, @child1, 1).partially_contain?(@child2)
-    assert_true Nokogiri::XML::Range.new(@child1.children[0], 0, @child2, 0).partially_contain?(@child1)
+  def test_partially_contain_node?
+    assert_false Nokogiri::XML::Range.new(@root, 0, @child1, 0).partially_contain_node?(@child2)
+    assert_false Nokogiri::XML::Range.new(@child1, 0, @child2, 0).partially_contain_node?(@root)
+    assert_false Nokogiri::XML::Range.new(@child1, 0, @child1, 1).partially_contain_node?(@child2)
+    assert_true Nokogiri::XML::Range.new(@child1.children[0], 0, @child2, 0).partially_contain_node?(@child1)
   end
 
   def test_common_ancestor_container
-    assert_equal @parent, Nokogiri::XML::Range.new(@child1, 0, @child2, 0).common_ancestor_container
+    assert_equal @parent, Nokogiri::XML::Range.new(@child1, 0, @child2.children[0], 0).common_ancestor_container
   end
 
   def test_set_boundary_point

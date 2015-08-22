@@ -124,22 +124,22 @@ module Nokogiri::XML
     def clone_range
     end
 
-    def contain?(node)
+    def contain_node?(node)
       document == node.document and
         self.class.compare_points(@start_container, @start_offset, node, 0) <= 0 and
         self.class.compare_points(node, node.length, @end_container, @end_offset) == -1
     end
-    alias include? contain?
-    alias cover? contain?
+    alias include_node? contain_node?
+    alias cover_node? contain_node?
 
-    def partially_contain?(node)
+    def partially_contain_node?(node)
       path_to_start = @start_container.ancestors_to(node)
       path_to_end = @end_container.ancestors_to(node)
       !path_to_start.nil? && path_to_end.nil? or
         path_to_start.nil? && !path_to_end.nil?
     end
-    alias partially_include? partially_contain?
-    alias partially_cover? partially_contain?
+    alias partially_include_node? partially_contain_node?
+    alias partially_cover_node? partially_contain_node?
 
     def point_in_range?(node, offset)
     end
