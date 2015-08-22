@@ -33,4 +33,11 @@ EOX
     assert_true Nokogiri::XML::Range.new(@doc.root, 0, @child2, 0).contain?(@child1)
     assert_false Nokogiri::XML::Range.new(@doc.root, 0, @child1, 1).contain?(@child2)
   end
+
+  def test_partially_contain?
+    assert_false Nokogiri::XML::Range.new(@root, 0, @child1, 0).partially_contain?(@child2)
+    assert_false Nokogiri::XML::Range.new(@child1, 0, @child2, 0).partially_contain?(@root)
+    assert_false Nokogiri::XML::Range.new(@child1, 0, @child1, 1).partially_contain?(@child2)
+    assert_true Nokogiri::XML::Range.new(@child1.children[0], 0, @child2, 0).partially_contain?(@child1)
+  end
 end
