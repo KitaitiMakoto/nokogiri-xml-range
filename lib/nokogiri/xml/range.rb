@@ -5,6 +5,11 @@ require 'nokogiri/xml/range/extension'
 using Nokogiri::XML::Range::Extension
 
 class Nokogiri::XML::Range
+  START_TO_START = 0
+  START_TO_END = 1
+  END_TO_END = 2
+  END_TO_START = 3
+
   class << self
     def compare_points(node1, offset1, node2, offset2)
       return unless node1.document == node2.document
