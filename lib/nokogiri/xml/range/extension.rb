@@ -3,13 +3,13 @@ module Nokogiri::XML
     module Extension
       refine Nokogiri::XML::Node do
         def ancestors_to(node)
-          nodes = []
+          nodes = NodeSet.new(document)
           current = self
           root = document.root
-          nodes.unshift current
+          nodes << current
           until current == node or current == root
             current = current.parent
-            nodes.unshift current
+            nodes << current
           end
           return unless current == node
           nodes

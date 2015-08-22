@@ -24,9 +24,9 @@ module Nokogiri::XML
         when 1
           compare_points(node2, offset2, node1, offset1) * -1
         else
-          ancestors = node2.ancestors_to(node1) # nil or [node1, child of node1, ..., parent of node2, node2]
+          ancestors = node2.ancestors_to(node1) # nil or [node2, parent of node2, ..., child of node1, node1]
           if ancestors
-            if node1.children.index(ancestors[1]) < offset1
+            if node1.children.index(ancestors[ancestors.length - 2]) < offset1
               1
             else
               -1
