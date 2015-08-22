@@ -12,6 +12,7 @@ class TestNokogiriXMLRange < Test::Unit::TestCase
 </root>
 EOX
     @root = @doc.search('root')[0]
+    @parent = @doc.search('parent')[0]
     @child1 = @doc.search('child')[0]
     @child2 = @doc.search('child')[1]
   end
@@ -41,5 +42,9 @@ EOX
     assert_false Nokogiri::XML::Range.new(@child1, 0, @child2, 0).partially_contain?(@root)
     assert_false Nokogiri::XML::Range.new(@child1, 0, @child1, 1).partially_contain?(@child2)
     assert_true Nokogiri::XML::Range.new(@child1.children[0], 0, @child2, 0).partially_contain?(@child1)
+  end
+
+  def test_common_ancestor_container
+    assert_equal @parent, Nokogiri::XML::Range.new(@child1, 0, @child2, 0).common_ancestor_container
   end
 end
