@@ -28,4 +28,23 @@ class Nokogiri::XML::Range
       end
     end
   end
+
+  attr_accessor :start_container, :start_offset, :end_container, :end_offset
+  alias start_node start_container
+  alias start_node= start_container=
+  alias end_node end_container
+  alias end_node= end_container=
+
+  def initialize(start_container, start_offset, end_container, end_offset)
+    @start_container, @start_offset, @end_container, @end_offset =
+      start_container, start_offset, end_container, end_offset
+  end
+
+  def contain?(node)
+    document == node.document and
+      self.class.compare_points(@start_container, @start_offset, node, 0) <= 0 and
+      self.class.compare_points(node, node.length, @end_container, @end_offset) == -1
+  end
+  alias include? contain?
+  alias cover? contain?
 end
