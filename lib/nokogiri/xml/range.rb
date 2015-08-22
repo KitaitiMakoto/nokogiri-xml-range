@@ -45,6 +45,52 @@ class Nokogiri::XML::Range
       start_container, start_offset, end_container, end_offset
   end
 
+  def start_point
+    [@start_container, @start_offset]
+  end
+
+  def end_point
+    [@end_container, @end_offset]
+  end
+
+  def document
+    @start_container.document
+  end
+
+  def root
+    document.root
+  end
+
+  def collapsed?
+  end
+
+  def select_node(node)
+  end
+
+  def select_node_contents(node)
+  end
+
+  def compare_boundary_points(how, source_range)
+  end
+
+  def delete_contents
+  end
+
+  def extract_contents
+  end
+
+  def clone_contents
+  end
+
+  def insert_node(node)
+  end
+
+  def surround_contents(new_parent)
+  end
+
+  def clone_range
+  end
+
   def contain?(node)
     document == node.document and
       self.class.compare_points(@start_container, @start_offset, node, 0) <= 0 and
@@ -61,4 +107,16 @@ class Nokogiri::XML::Range
   end
   alias partially_include? partially_contain?
   alias partially_cover? partially_contain?
+
+  def point_in_range?(node, offset)
+  end
+
+  def compare_point(node, offset)
+  end
+
+  def intersect_node?(node)
+  end
+
+  def to_s
+  end
 end
