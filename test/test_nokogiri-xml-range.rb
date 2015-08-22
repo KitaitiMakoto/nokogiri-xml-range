@@ -5,8 +5,10 @@ class TestNokogiriXMLRange < Test::Unit::TestCase
   def setup
     @doc = Nokogiri.XML(<<EOX)
 <root>
-  <child>child 1</child>
-  <child>child 2</child>
+  <parent>
+    <child>child 1</child>
+    <child>child 2</child>
+  </parent>
 </root>
 EOX
     @root = @doc.search('root')[0]
