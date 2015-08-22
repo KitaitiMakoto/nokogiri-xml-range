@@ -75,6 +75,11 @@ module Nokogiri::XML
 
     def set_end(node, offset)
       validate_boundary_point node, offset
+      if document != node.document or
+        self.class.compare_points(node, offset, @start_container, @start_offset) == -1
+        set_start node, offset
+      end
+      @end_container, @end_offset = node, offset
     end
     alias end= set_end
 
@@ -146,6 +151,13 @@ module Nokogiri::XML
     end
 
     def to_s
+    end
+
+    private
+
+    def validate_boundary_point(node, offset)
+      raise InvalidNodeTypeError, 'document type declaration cannot be a boundary point' if node.type == Node::DOCUMENT_TYPE_NODE
+      raise IndexSizeError, 'offset is greater than node length' if offset > node.length
     end
   end
 end
