@@ -47,4 +47,13 @@ class Nokogiri::XML::Range
   end
   alias include? contain?
   alias cover? contain?
+
+  def partially_contain?(node)
+    path_to_start = @start_container.ancestors_to(node)
+    path_to_end = @end_container.ancestors_to(node)
+    !path_to_start.nil? && path_to_end.nil? or
+      path_to_start.nil? && !path_to_end.nil?
+  end
+  alias partially_include? partially_contain?
+  alias partially_cover? partially_contain?
 end
