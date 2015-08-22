@@ -66,6 +66,15 @@ class Nokogiri::XML::Range
       @start_container == @end_container
   end
 
+  def common_ancestor_container
+    container = @start_container
+    ancestors_of_end = @end_container.ancestors
+    until ancestors_of_end.include?(container)
+      container = container.parent
+    end
+    container
+  end
+
   def select_node(node)
   end
 
