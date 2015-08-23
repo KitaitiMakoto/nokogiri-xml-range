@@ -20,7 +20,7 @@ module Nokogiri::XML
           when Node::DOCUMENT_TYPE_NODE
             0
           when Node::TEXT_NODE, Node::CDATA_SECTION_NODE, Node::PI_NODE, Node::COMMENT_NODE
-            content.encode('UTF-16').bytesize / 2
+            content.encode('UTF-16LE').bytesize / 2
           else
             children.length
           end
