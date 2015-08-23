@@ -13,6 +13,8 @@ module Nokogiri::XML
 
     class InvalidNodeTypeError < StandardError; end
     class IndexSizeError < StandardError; end
+    class NotSupportedError < StandardError; end
+    class WrongDocumentError < StandardError; end
 
     class << self
       def compare_points(node1, offset1, node2, offset2)
@@ -141,6 +143,21 @@ module Nokogiri::XML
     end
 
     def compare_boundary_points(how, source_range)
+      raise WrongDocumentError, 'different document' unless source_range.document == document
+      this_point, other_point =
+        case how
+        when START_TO_START
+          [start_point, source_range.start_point]
+        when START_TO_END
+          [end_point, source_range.start_point]
+        when END_TO_END
+          [end_point, source_range.end_point]
+        when END_TO_START
+          [start_point, source_range.end_point]
+        else
+          raise NotSupportedError, 'unsupported way to compare'
+        end
+      self.class.compare_points(this_point[0], this_point[1], other_point[0], other_point[1])
     end
 
     def delete_contents
