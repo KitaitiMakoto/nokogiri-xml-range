@@ -38,6 +38,22 @@ module Nokogiri::XML
           end
         end
       end
+
+      def replace_data(node, offset, count, data)
+        raise 'node type should be a text, processing instruction or comment' unless node.text? or node.processing_instruction? or node.comment?
+        length = node.length
+        raise IndexSizeError, 'offset is greater than node length' if offset > length
+
+        count = length - offset if offset + count > length
+        encoding = node.content.encoding
+        utf16_content = node.content.encode('UTF-16LE')
+        utf16_data = data.encode('UTF-16LE')
+        result = utf16_content.byteslice(0, offset * 2) + utf16_data + utf16_content.byteslice(offset * 2, utf16_content.bytesize)
+        delete_offset = offset + utf16_data.bytesize / 2
+        result = result.byteslice(0, delete_offset * 2) + result.byteslice((delete_offset + count) * 2, result.bytesize)
+
+        node.content = result.encode(encoding)
+      end
     end
 
     attr_reader :start_container, :start_offset, :end_container, :end_offset
