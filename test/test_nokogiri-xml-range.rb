@@ -59,4 +59,11 @@ EOX
     assert_equal [@parent, 1], range2.end_point
     assert_equal [@parent, 1], range2.start_point
   end
+
+  def test_set_start_before
+    range = Nokogiri::XML::Range.new(@child2, 0, @child2, 1)
+    range.set_start_before(@child1)
+
+    assert_equal [@parent, 1], range.start_point
+  end
 end
