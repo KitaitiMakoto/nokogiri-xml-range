@@ -127,6 +127,11 @@ module Nokogiri::XML
     end
 
     def select_node(node)
+      parent = node.parent
+      raise InvalidNodeTypeError, 'parent node is empty' unless parent
+      index = parent.children.index(node)
+      set_start parent, index
+      set_end parent, index + 1
     end
 
     def select_node_contents(node)
