@@ -89,6 +89,24 @@ module Nokogiri::XML
       set_start(parent, parent.children.index(node))
     end
 
+    def set_start_after(node)
+      parent = node.parent
+      raise InvalidNodeTypeError, 'parent node is empty' unless parent
+      set_start(parent, parent.children.index(node) + 1)
+    end
+
+    def set_end_before(node)
+      parent = node.parent
+      raise InvalidNodeTypeError, 'parent node is empty' unless parent
+      set_end(parent, parent.children.index(node))
+    end
+
+    def set_end_after(node)
+      parent = node.parent
+      raise InvalidNodeTypeError, 'parent node is empty' unless parent
+      set_end(parent, parent.children.index(node) + 1)
+    end
+
     def collapsed?
       @start_offset == @end_offset and
         @start_container == @end_container
