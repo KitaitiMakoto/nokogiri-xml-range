@@ -83,6 +83,12 @@ module Nokogiri::XML
     end
     alias end= set_end
 
+    def set_start_before(node)
+      parent = node.parent
+      raise InvalidNodeTypeError, 'parent node is empty' unless parent
+      set_start(parent, parent.children.index(node))
+    end
+
     def collapsed?
       @start_offset == @end_offset and
         @start_container == @end_container
