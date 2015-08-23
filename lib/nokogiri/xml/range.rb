@@ -112,6 +112,11 @@ module Nokogiri::XML
         @start_container == @end_container
     end
 
+    def collapse(to_start=false)
+      to_start ? set_end(*start_point) : set_start(*end_point)
+    end
+    alias collapse! collapse
+
     def common_ancestor_container
       container = @start_container
       ancestors_of_end = @end_container.ancestors
