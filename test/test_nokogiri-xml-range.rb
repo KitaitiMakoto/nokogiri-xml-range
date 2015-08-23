@@ -95,4 +95,12 @@ EOX
     assert_equal [@child2, 1], range.start_point
     assert_equal [@child2, 1], range.end_point
   end
+
+  def test_select_node
+    range = Nokogiri::XML::Range.new(@child1, 0, @child2, 1)
+    range.select_node(@parent)
+
+    assert_equal [@root, 1], range.start_point
+    assert_equal [@root, 2], range.end_point
+  end
 end
