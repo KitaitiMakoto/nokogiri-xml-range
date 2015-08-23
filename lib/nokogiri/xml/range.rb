@@ -177,6 +177,44 @@ module Nokogiri::XML
     end
 
     def delete_contents
+      return if @start_offset == @end_offset and @start_container == @end_container
+
+      original_start_node, original_start_offset, original_end_node, original_end_offset =
+        @start_container, @start_offset, @end_container, @end_offset
+      if original_start_node == original_end_node and
+        original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
+        self.class.replace_data original_start_node, original_start_offset, original_end_offset - original_start_offset, ''
+      end
+
+      nodes_to_remove = NodeSet.new(document)
+      common_ancestor = common_ancestor_container
+      select_containing_node common_ancestor, nodes_to_remove
+
+      if original_end_node.ancestors_to original_start_node
+        new_node, new_offset = original_start_node, original_start_offset
+      else
+        reference_node = original_start_node
+        parent = reference_node.parent
+        while parent and !original_end_node.ancestors_to(parent)
+          reference_node = parent
+          parent = reference_node.parent
+        end
+        new_node = reference_node.parent
+        new_offset = parent.children.index(reference_node) + 1
+      end
+
+      if original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
+        self.class.replace_data original_start_node, original_start_offset, original_start_node.length - original_start_offset, ''
+      end
+
+      nodes_to_remove.each &:remove
+
+      if original_end_node.text? || original_end_node.processing_instruction? || original_end_node.comment?
+        self.class.replace_data original_end_node, 0, original_end_offset, ''
+      end
+
+      set_start new_node, new_offset
+      set_end new_node, new_offset
     end
 
     def extract_contents
@@ -228,6 +266,18 @@ module Nokogiri::XML
     def validate_boundary_point(node, offset)
       raise InvalidNodeTypeError, 'document type declaration cannot be a boundary point' if node.type == Node::DOCUMENT_TYPE_NODE
       raise IndexSizeError, 'offset is greater than node length' if offset > node.length
+    end
+
+    # @note depth first order
+    # @note modifies +node_set+
+    def select_containing_node(node, node_set)
+      if contain_node?(node)
+        node_set << node
+      else
+        node.children.each do |child|
+          select_containing_node child, node_set
+        end
+      end
     end
   end
 end
