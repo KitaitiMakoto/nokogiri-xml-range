@@ -136,4 +136,17 @@ EOX
 
     assert_equal 'hello, 世界', text.content
   end
+
+  def test_delete_contents
+    range = Nokogiri::XML::Range.new(@child1, 0, @parent, 4)
+    range.delete_contents
+
+    assert_equal Nokogiri.XML(<<EXPECTED).to_s, @doc.to_s
+<root>
+  <parent>
+    
+  </parent>
+</root>
+EXPECTED
+  end
 end
