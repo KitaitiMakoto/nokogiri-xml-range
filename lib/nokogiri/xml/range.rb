@@ -135,6 +135,9 @@ module Nokogiri::XML
     end
 
     def select_node_contents(node)
+      raise InvalidNodeTypeError, 'document type declaration is passed' if node.type == Node::DOCUMENT_TYPE_NODE
+      set_start node, 0
+      set_end node, node.length
     end
 
     def compare_boundary_points(how, source_range)
