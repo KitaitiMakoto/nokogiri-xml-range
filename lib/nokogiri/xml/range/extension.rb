@@ -26,6 +26,14 @@ module Nokogiri::XML
           end
         end
       end
+
+      refine CharacterData do
+        include Replacable
+      end
+
+      refine ProcessingInstruction do
+        include Replacable
+      end
     end
   end
 end

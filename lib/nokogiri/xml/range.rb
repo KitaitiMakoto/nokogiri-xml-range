@@ -1,5 +1,6 @@
 require 'nokogiri/xml/range/version'
 require 'nokogiri'
+require 'nokogiri/xml/replacable'
 require 'nokogiri/xml/range/extension'
 
 using Nokogiri::XML::Range::Extension
@@ -37,22 +38,6 @@ module Nokogiri::XML
             -1
           end
         end
-      end
-
-      def replace_data(node, offset, count, data)
-        raise 'node type should be a text, processing instruction or comment' unless node.text? or node.processing_instruction? or node.comment?
-        length = node.length
-        raise IndexSizeError, 'offset is greater than node length' if offset > length
-
-        count = length - offset if offset + count > length
-        encoding = node.content.encoding
-        utf16_content = node.content.encode('UTF-16LE')
-        utf16_data = data.encode('UTF-16LE')
-        result = utf16_content.byteslice(0, offset * 2) + utf16_data + utf16_content.byteslice(offset * 2, utf16_content.bytesize)
-        delete_offset = offset + utf16_data.bytesize / 2
-        result = result.byteslice(0, delete_offset * 2) + result.byteslice((delete_offset + count) * 2, result.bytesize)
-
-        node.content = result.encode(encoding)
       end
     end
 
@@ -183,7 +168,7 @@ module Nokogiri::XML
         @start_container, @start_offset, @end_container, @end_offset
       if original_start_node == original_end_node and
         original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
-        self.class.replace_data original_start_node, original_start_offset, original_end_offset - original_start_offset, ''
+        original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
       end
 
       nodes_to_remove = NodeSet.new(document)
@@ -204,13 +189,13 @@ module Nokogiri::XML
       end
 
       if original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
-        self.class.replace_data original_start_node, original_start_offset, original_start_node.length - original_start_offset, ''
+        original_start_node.replace_data original_start_offset, original_start_node.length - original_start_offset, ''
       end
 
       nodes_to_remove.each &:remove
 
       if original_end_node.text? || original_end_node.processing_instruction? || original_end_node.comment?
-        self.class.replace_data original_end_node, 0, original_end_offset, ''
+        original_end_node.replace_data 0, original_end_offset, ''
       end
 
       set_start new_node, new_offset
