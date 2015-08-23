@@ -111,4 +111,21 @@ EOX
     assert_equal [@child2, 0], range.start_point
     assert_equal [@child2, 1], range.end_point
   end
+
+  data(
+    {
+      'START_TO_START' => [-1, Nokogiri::XML::Range::START_TO_START],
+      'START_TO_END' => [1, Nokogiri::XML::Range::START_TO_END],
+      'END_TO_END' => [1, Nokogiri::XML::Range::END_TO_END],
+      'END_TO_START' => [-1, Nokogiri::XML::Range::END_TO_START]
+    }
+  )
+  def test_compare_boundary_points(data)
+    comparison, how = data
+
+    range1 = Nokogiri::XML::Range.new(@parent, 0, @child2, 1)
+    range2 = Nokogiri::XML::Range.new(@child1, 0, @parent, 3)
+
+    assert_equal comparison, range1.compare_boundary_points(how, range2)
+  end
 end
