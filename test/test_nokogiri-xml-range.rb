@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'helper'
 require 'nokogiri/xml/range'
 
@@ -127,5 +128,12 @@ EOX
     range2 = Nokogiri::XML::Range.new(@child1, 0, @parent, 3)
 
     assert_equal comparison, range1.compare_boundary_points(how, range2)
+  end
+
+  def test_replace_data
+    text = Nokogiri::XML::Text.new('hello, world', @doc)
+    Nokogiri::XML::Range.replace_data(text, 7, 5, '世界')
+
+    assert_equal 'hello, 世界', text.content
   end
 end
