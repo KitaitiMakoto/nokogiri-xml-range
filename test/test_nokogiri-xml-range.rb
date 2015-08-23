@@ -87,4 +87,12 @@ EOX
 
     assert_equal [@root, 2], range.end_point
   end
+
+  def test_collapse
+    range = Nokogiri::XML::Range.new(@child1, 0, @child2, 1)
+    range.collapse!
+
+    assert_equal [@child2, 1], range.start_point
+    assert_equal [@child2, 1], range.end_point
+  end
 end
