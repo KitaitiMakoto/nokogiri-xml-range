@@ -184,7 +184,7 @@ module Nokogiri::XML
           reference_node = parent
           parent = reference_node.parent
         end
-        new_node = reference_node.parent
+        new_node = parent
         new_offset = parent.children.index(reference_node) + 1
       end
 
