@@ -166,8 +166,7 @@ module Nokogiri::XML
 
       original_start_node, original_start_offset, original_end_node, original_end_offset =
         @start_container, @start_offset, @end_container, @end_offset
-      if original_start_node == original_end_node and
-        original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
+      if original_start_node == original_end_node and original_start_node.replacable?
         original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
       end
 
@@ -188,13 +187,13 @@ module Nokogiri::XML
         new_offset = parent.children.index(reference_node) + 1
       end
 
-      if original_start_node.text? || original_start_node.processing_instruction? || original_start_node.comment?
+      if original_start_node.replacable?
         original_start_node.replace_data original_start_offset, original_start_node.length - original_start_offset, ''
       end
 
       nodes_to_remove.each &:remove
 
-      if original_end_node.text? || original_end_node.processing_instruction? || original_end_node.comment?
+      if original_end_node.replacable?
         original_end_node.replace_data 0, original_end_offset, ''
       end
 
