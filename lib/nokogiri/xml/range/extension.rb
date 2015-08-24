@@ -25,6 +25,10 @@ module Nokogiri::XML
             children.length
           end
         end
+
+        def replacable?
+          kind_of? Replacable
+        end
       end
 
       refine CharacterData do
