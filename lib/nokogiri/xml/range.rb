@@ -162,7 +162,7 @@ module Nokogiri::XML
     end
 
     def delete_contents
-      return if @start_offset == @end_offset and @start_container == @end_container
+      return if collapsed?
 
       original_start_node, original_start_offset, original_end_node, original_end_offset =
         @start_container, @start_offset, @end_container, @end_offset
