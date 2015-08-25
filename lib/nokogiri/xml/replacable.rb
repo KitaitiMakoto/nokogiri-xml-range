@@ -17,6 +17,19 @@ module Nokogiri::XML
       self.content = result.encode(encoding)
     end
 
+    def substring_data(offset, count)
+      len = length
+      raise IndexSizeError, 'offset is greater than node length' if offset > len
+
+      encoding = content.encoding
+      utf16_content = content.encode('UTF-16LE')
+
+      end_offset = offset + count > len ? utf16_content.bytesize
+                                        : (offset + count) * 2
+      utf16_content.byteslice(offset * 2, end_offset).encode(encoding)
+    end
+  end
+
   class CharacterData
     include Replacable
   end
