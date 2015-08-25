@@ -130,7 +130,7 @@ EOX
     assert_equal comparison, range1.compare_boundary_points(how, range2)
   end
 
-  def test_delete_contents
+  def test_delete_contents_child_elements
     range = Nokogiri::XML::Range.new(@child1, 0, @parent, 4)
     range.delete_contents
 
@@ -138,6 +138,20 @@ EOX
 <root>
   <parent>
     
+  </parent>
+</root>
+EXPECTED
+  end
+
+  def test_delete_contents_text
+    range = Nokogiri::XML::Range.new(@child1.children[0], 1, @child1.children[0], 5)
+    range.delete_contents
+
+    assert_equal Nokogiri.XML(<<EXPECTED).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>c 1</child>
+    <child>child 2</child>
   </parent>
 </root>
 EXPECTED
