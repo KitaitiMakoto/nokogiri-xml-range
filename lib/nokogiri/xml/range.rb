@@ -172,6 +172,7 @@ module Nokogiri::XML
         @start_container, @start_offset, @end_container, @end_offset
       if original_start_node == original_end_node and original_start_node.replacable?
         original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
+        return
       end
 
       nodes_to_remove = NodeSet.new(document)
