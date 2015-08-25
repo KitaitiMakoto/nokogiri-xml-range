@@ -29,7 +29,11 @@ module Nokogiri::XML
         else
           ancestors = node2.ancestors_to(node1) # nil or [node2, parent of node2, ..., child of node1, node1]
           if ancestors
-            if node1.children.index(ancestors[ancestors.length - 2]) < offset1
+            child = nil
+            ancestors.reverse_each do |anc|
+              child = anc if anc.parent == node1
+            end
+            if node1.children.index(child) < offset1
               1
             else
               -1
