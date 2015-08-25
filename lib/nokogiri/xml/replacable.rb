@@ -1,3 +1,5 @@
+using Nokogiri::XML::Range::Extension
+
 module Nokogiri::XML
   module Replacable
     def replace_data(offset, count, data)
@@ -14,5 +16,12 @@ module Nokogiri::XML
 
       self.content = result.encode(encoding)
     end
+
+  class CharacterData
+    include Replacable
+  end
+
+  class ProcessingInstruction
+    include Replacable
   end
 end

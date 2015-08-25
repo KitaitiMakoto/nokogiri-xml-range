@@ -27,16 +27,8 @@ module Nokogiri::XML
         end
 
         def replacable?
-          kind_of? Replacable
+          kind_of? Nokogiri::XML::Replacable
         end
-      end
-
-      refine CharacterData do
-        include Replacable
-      end
-
-      refine ProcessingInstruction do
-        include Replacable
       end
     end
   end
