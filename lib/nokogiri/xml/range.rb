@@ -1,21 +1,21 @@
 require 'nokogiri/xml/range/version'
 require 'nokogiri'
-require 'nokogiri/xml/replacable'
 require 'nokogiri/xml/range/extension'
+require 'nokogiri/xml/replacable'
 
 using Nokogiri::XML::Range::Extension
 
 module Nokogiri::XML
+  class InvalidNodeTypeError < StandardError; end
+  class IndexSizeError < StandardError; end
+  class NotSupportedError < StandardError; end
+  class WrongDocumentError < StandardError; end
+
   class Range
     START_TO_START = 0
     START_TO_END = 1
     END_TO_END = 2
     END_TO_START = 3
-
-    class InvalidNodeTypeError < StandardError; end
-    class IndexSizeError < StandardError; end
-    class NotSupportedError < StandardError; end
-    class WrongDocumentError < StandardError; end
 
     class << self
       def compare_points(node1, offset1, node2, offset2)
