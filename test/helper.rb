@@ -1,3 +1,4 @@
+require 'pp'
 require 'rubygems'
 require 'test/unit'
 require 'test/unit/notify'
