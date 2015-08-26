@@ -24,9 +24,8 @@ module Nokogiri::XML
       encoding = content.encoding
       utf16_content = content.encode('UTF-16LE')
 
-      end_offset = offset + count > len ? utf16_content.bytesize
-                                        : (offset + count) * 2
-      utf16_content.byteslice(offset * 2, end_offset).encode(encoding)
+      byte_length = [utf16_content.bytesize - offset * 2, count * 2].min
+      utf16_content.byteslice(offset * 2, byte_length).encode(encoding)
     end
   end
 
