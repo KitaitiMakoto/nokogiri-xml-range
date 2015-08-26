@@ -222,7 +222,7 @@ module Nokogiri::XML
 
     def contain_node?(node)
       document == node.document and
-        self.class.compare_points(@start_container, @start_offset, node, 0) <= 0 and
+        self.class.compare_points(node, 0, @start_container, @start_offset) == 1 and
         self.class.compare_points(node, node.length, @end_container, @end_offset) == -1
     end
     alias include_node? contain_node?
