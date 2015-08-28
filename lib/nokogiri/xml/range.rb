@@ -201,7 +201,8 @@ module Nokogiri::XML
         @end_container.replace_data 0, @end_offset, ''
       end
 
-      @start_container, @start_offset = @end_container, @end_offset = new_node, new_offset
+      @start_container = @end_container = new_node
+      @start_offset = @end_offset = new_offset
     end
 
     def extract_contents
