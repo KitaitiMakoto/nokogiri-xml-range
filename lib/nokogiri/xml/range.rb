@@ -215,6 +215,7 @@ module Nokogiri::XML
         cloned.content = @start_container.substring_data(@start_offset, @end_offset - @start_offset)
         fragment << cloned
         @start_container.replace_data @start_offset, @end_offset - @start_offset, ''
+        return fragment
       end
       common_ancestor = common_ancestor_container
       end_node_ancestors = [@end_container] + @end_container.ancestors
