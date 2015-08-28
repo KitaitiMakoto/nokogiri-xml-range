@@ -215,4 +215,21 @@ EXTRACTED
 REMAINED
     assert_equal 'hild', extracted.to_s
   end
+
+  def test_clone_contents_from_elements
+    range = Nokogiri::XML::Range.new(@child1.child, 1, @child2.child, 5)
+    cloned = range.clone_contents
+
+    assert_equal <<CLONED.chomp, cloned.to_s.chomp
+<child>hild 1</child>
+    <child>child</child>
+CLONED
+  end
+
+  def test_clone_contents_from_text
+    range = Nokogiri::XML::Range.new(@child1.child, 1, @child1.child, 5)
+    cloned = range.clone_contents
+
+    assert_equal 'hild', cloned.to_s
+  end
 end
