@@ -126,7 +126,7 @@ module Nokogiri::XML
 
     def common_ancestor_container
       container = @start_container
-      ancestors_of_end = @end_container.ancestors
+      ancestors_of_end = [@end_container] + @end_container.ancestors
       until ancestors_of_end.include?(container)
         container = container.parent
       end
