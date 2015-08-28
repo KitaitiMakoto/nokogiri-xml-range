@@ -169,10 +169,8 @@ module Nokogiri::XML
     def delete_contents
       return if collapsed?
 
-      original_start_node, original_start_offset, original_end_node, original_end_offset =
-        @start_container, @start_offset, @end_container, @end_offset
-      if original_start_node == original_end_node and original_start_node.replacable?
-        original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
+      if @start_container == @end_container and @start_container.replacable?
+        @start_container.replace_data @start_offset, @end_offset - @start_offset, ''
         return
       end
 
@@ -180,12 +178,12 @@ module Nokogiri::XML
       common_ancestor = common_ancestor_container
       select_containing_node common_ancestor, nodes_to_remove
 
-      if original_end_node.ancestors_to original_start_node
-        new_node, new_offset = original_start_node, original_start_offset
+      if @end_container.ancestors_to @start_container
+        new_node, new_offset = @start_container, @start_offset
       else
-        reference_node = original_start_node
+        reference_node = @start_container
         parent = reference_node.parent
-        while parent and !original_end_node.ancestors_to(parent)
+        while parent and !@end_container.ancestors_to(parent)
           reference_node = parent
           parent = reference_node.parent
         end
@@ -193,14 +191,14 @@ module Nokogiri::XML
         new_offset = parent.children.index(reference_node) + 1
       end
 
-      if original_start_node.replacable?
-        original_start_node.replace_data original_start_offset, original_start_node.length - original_start_offset, ''
+      if @start_container.replacable?
+        @start_container.replace_data @start_offset, @start_container.length - @start_offset, ''
       end
 
       nodes_to_remove.each &:remove
 
-      if original_end_node.replacable?
-        original_end_node.replace_data 0, original_end_offset, ''
+      if @end_container.replacable?
+        @end_container.replace_data 0, @end_offset, ''
       end
 
       @start_container, @start_offset = @end_container, @end_offset = new_node, new_offset
@@ -209,27 +207,26 @@ module Nokogiri::XML
     def extract_contents
       fragment = DocumentFragment.new(document)
       return fragment if collapsed?
-      original_start_node, original_start_offset, original_end_node, original_end_offset =
-        @start_container, @start_offset, @end_container, @end_offset
-      if original_start_node == original_end_node and original_start_node.replacable?
-        cloned = original_start_node.clone(0)
-        cloned.content = original_start_node.substring_data(original_start_offset, original_end_offset - original_start_offset)
+
+      if @start_container == @end_container and @start_container.replacable?
+        cloned = @start_container.clone(0)
+        cloned.content = @start_container.substring_data(@start_offset, @end_offset - @start_offset)
         fragment << cloned
-        original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
+        @start_container.replace_data @start_offset, @end_offset - @start_offset, ''
       end
-      common_ancestor = original_start_node
-      end_node_ancestors = [original_end_node] + original_end_node.ancestors
+      common_ancestor = @start_container
+      end_node_ancestors = [@end_container] + @end_container.ancestors
       until end_node_ancestors.include? common_ancestor
         common_ancestor = common_ancestor.parent
       end
       first_partially_contained_child =nil
-      unless end_node_ancestors.include? original_start_node
+      unless end_node_ancestors.include? @start_container
         first_partially_contained_child = common_ancestor.children.find {|child|
           partially_contain_node? child
         }
       end
       last_partially_contained_child = nil
-      unless original_start_node.ancestors_to original_end_node
+      unless @start_container.ancestors_to @end_container
         last_partially_contained_child = common_ancestor.children.reverse.find {|child|
           partially_contain_node? child
         }
@@ -241,10 +238,10 @@ module Nokogiri::XML
         child.type == Node::DOCUMENT_TYPE_NODE
       }
 
-      if end_node_ancestors.include? original_start_node
-        new_node, new_offset = original_start_node, original_start_offset
+      if end_node_ancestors.include? @start_container
+        new_node, new_offset = @start_container, @start_offset
       else
-        reference_node = original_start_node
+        reference_node = @start_container
         parent = reference_node.parent
         while parent and !end_node_ancestors.include?(parent)
           reference_node = reference_node.parent
@@ -256,14 +253,14 @@ module Nokogiri::XML
 
       if first_partially_contained_child && first_partially_contained_child.replacable?
 
-        cloned = original_start_node.clone(0)
-        cloned.content = original_start_node.substring_data(original_start_offset, original_start_node.length - original_start_offset)
+        cloned = @start_container.clone(0)
+        cloned.content = @start_container.substring_data(@start_offset, @start_container.length - @start_offset)
         fragment << cloned
-        original_start_node.replace_data original_start_offset, original_start_node.length - original_start_offset, ''
+        @start_container.replace_data @start_offset, @start_container.length - @start_offset, ''
       elsif first_partially_contained_child
         cloned = first_partially_contained_child.clone(0)
         fragment << cloned
-        subrange = Range.new(original_start_node, original_start_offset, first_partially_contained_child, first_partially_contained_child.length)
+        subrange = Range.new(@start_container, @start_offset, first_partially_contained_child, first_partially_contained_child.length)
         subfragment = subrange.extract_contents
         cloned << subfragment
       end
@@ -272,14 +269,14 @@ module Nokogiri::XML
       end
       if last_partially_contained_child && last_partially_contained_child.replacable?
 
-        cloned = original_end_node.clone(0)
-        cloned.content = original_end_node.substring_data(0, original_end_offset)
+        cloned = @end_container.clone(0)
+        cloned.content = @end_container.substring_data(0, @end_offset)
         fragment << cloned
-        original_end_node.replace_data 0, original_end_offset, ''
+        @end_container.replace_data 0, @end_offset, ''
       elsif last_partially_contained_child
         cloned = last_partially_contained_child.clone(0)
         fragment << cloned
-        subrange = Range.new(last_partially_contained_child, 0, original_end_node, original_end_offset)
+        subrange = Range.new(last_partially_contained_child, 0, @end_container, @end_offset)
         subfragment = subrange.extract_contents
         cloned << subfragment
       end
