@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'nokogiri/xml/range/version'
 require 'nokogiri'
 require 'nokogiri/xml/range/extension'
@@ -284,6 +285,70 @@ module Nokogiri::XML
     end
 
     def clone_contents
+      fragment = DocumentFragment.new(document)
+      return fragment if collapsed?
+
+      if @start_container == @end_container and @start_container.replacable?
+        cloned = @start_container.clone(0)
+        cloned.content = @start_container.substring_data(@start_offset, @end_offset - @start_offset)
+        fragment << cloned
+        return fragment
+      end
+
+      common_ancestor = common_ancestor_container
+      first_partially_contained_child = nil
+      @end_node_ancestors = [@end_container] + @end_container.ancestors
+      unless @end_node_ancestors.include?(@start_container)
+        first_partially_contained_child = common_ancestor.children.find {|child|
+          partially_contain_node? child
+        }
+      end
+      last_partially_contained_child = nil
+      unless ([@start_container] + @start_container.ancestors).include? @end_container
+        last_partially_contained_child = common_ancestor.children.reverse.find {|child|
+          partially_contain_node? child
+        }
+      end
+
+      contained_children = common_ancestor.children.select {|child|
+        contain_node? child
+      }
+
+      raise HierarchyRequestError if contained_children.any? {|child|
+        child.type == Node::DOCUMENT_TYPE_NODE
+      }
+
+      if first_partially_contained_child && first_partially_contained_child.replacable?
+
+        cloned = @start_container.clone(0)
+        cloned.content = @start_container.substring_data(@start_offset, @start_container.length - @start_offset)
+        fragment << cloned
+      elsif first_partially_contained_child
+        cloned =first_partially_contained_child.clone(0)
+        fragment << cloned
+        subrange = self.class.new(@start_container, @start_offset, first_partially_contained_child, first_partially_contained_child.length)
+        subfragment = subrange.clone_contents
+        cloned << subfragment
+      end
+
+      contained_children.each do |contained_child|
+        cloned = contained_child.clone(1)
+        fragment << cloned
+      end
+
+      if last_partially_contained_child && last_partially_contained_child.replacable?
+        cloned = @end_container.clone(0)
+        cloned.content = @end_container.substring_data(0, @end_offset)
+        fragment << cloned
+      elsif last_partially_contained_child
+        cloned = last_partially_contained_child.clone(0)
+        fragment << cloned
+        subrange = self.class.new(last_partially_contained_child, 0, @end_container, @end_offset)
+        subfragment = subrange.clone_contents
+        cloned << subfragment
+      end
+
+      fragment
     end
 
     def insert_node(node)
