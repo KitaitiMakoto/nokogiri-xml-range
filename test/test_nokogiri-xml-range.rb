@@ -156,4 +156,63 @@ EXPECTED
 </root>
 EXPECTED
   end
+
+  def test_extract_contents_child_elements
+    range = Nokogiri::XML::Range.new(@child1, 0, @parent, 4)
+    range.extract_contents
+
+    assert_equal Nokogiri.XML(<<EXPECTED).to_s, @doc.to_s
+<root>
+  <parent>
+    <child/>
+  </parent>
+</root>
+EXPECTED
+  end
+
+  def test_extract_contents_text
+    range = Nokogiri::XML::Range.new(@child1.children[0], 1, @child1.children[0], 5)
+    range.extract_contents
+
+    assert_equal Nokogiri.XML(<<EXPECTED).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>c 1</child>
+    <child>child 2</child>
+  </parent>
+</root>
+EXPECTED
+  end
+
+  def test_extract_contents_from_elements
+    range = Nokogiri::XML::Range.new(@child1.child, 1, @child2.child, 5)
+    extracted = range.extract_contents
+
+    assert_equal Nokogiri.XML(<<REMAINED).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>c</child><child> 2</child>
+  </parent>
+</root>
+REMAINED
+    assert_equal <<EXTRACTED.chomp, extracted.to_s.chomp
+<child>hild 1</child>
+    <child>child</child>
+EXTRACTED
+  end
+
+  def test_extract_contents_from_text
+    range = Nokogiri::XML::Range.new(@child1.child, 1, @child1.child, 5)
+    extracted = range.extract_contents
+
+    assert_equal Nokogiri.XML(<<REMAINED).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>c 1</child>
+    <child>child 2</child>
+  </parent>
+</root>
+REMAINED
+    assert_equal 'hild', extracted.to_s
+  end
 end
