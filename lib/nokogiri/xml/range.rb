@@ -216,6 +216,7 @@ module Nokogiri::XML
         @start_container.replace_data @start_offset, @end_offset - @start_offset, ''
       end
       common_ancestor = common_ancestor_container
+      end_node_ancestors = [@end_container] + @end_container.ancestors
       first_partially_contained_child =nil
       unless end_node_ancestors.include? @start_container
         first_partially_contained_child = common_ancestor.children.find {|child|
