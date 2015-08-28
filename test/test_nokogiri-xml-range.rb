@@ -137,7 +137,7 @@ EOX
     assert_equal Nokogiri.XML(<<EXPECTED).to_s, @doc.to_s
 <root>
   <parent>
-    
+    <child/>
   </parent>
 </root>
 EXPECTED
