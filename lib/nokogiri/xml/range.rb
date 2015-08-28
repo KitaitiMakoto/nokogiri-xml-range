@@ -10,6 +10,7 @@ module Nokogiri::XML
   class IndexSizeError < StandardError; end
   class NotSupportedError < StandardError; end
   class WrongDocumentError < StandardError; end
+  class HierarchyRequestError < StandardError; end
 
   class Range
     START_TO_START = 0
@@ -206,6 +207,85 @@ module Nokogiri::XML
     end
 
     def extract_contents
+      fragment = DocumentFragment.new(document)
+      return fragment if collapsed?
+      original_start_node, original_start_offset, original_end_node, original_end_offset =
+        @start_container, @start_offset, @end_container, @end_offset
+      if original_start_node == original_end_node and original_start_node.replacable?
+        cloned = original_start_node.clone(0)
+        cloned.content = original_start_node.substring_data(original_start_offset, original_end_offset - original_start_offset)
+        fragment << cloned
+        original_start_node.replace_data original_start_offset, original_end_offset - original_start_offset, ''
+      end
+      common_ancestor = original_start_node
+      end_node_ancestors = [original_end_node] + original_end_node.ancestors
+      until end_node_ancestors.include? common_ancestor
+        common_ancestor = common_ancestor.parent
+      end
+      first_partially_contained_child =nil
+      unless end_node_ancestors.include? original_start_node
+        first_partially_contained_child = common_ancestor.children.find {|child|
+          partially_contain_node? child
+        }
+      end
+      last_partially_contained_child = nil
+      unless original_start_node.ancestors_to original_end_node
+        last_partially_contained_child = common_ancestor.children.reverse.find {|child|
+          partially_contain_node? child
+        }
+      end
+      contained_children = common_ancestor.children.select {|child|
+        contain_node? child
+      }
+      raise HierarchyRequestError if contained_children.any? {|child|
+        child.type == Node::DOCUMENT_TYPE_NODE
+      }
+
+      if end_node_ancestors.include? original_start_node
+        new_node, new_offset = original_start_node, original_start_offset
+      else
+        reference_node = original_start_node
+        parent = reference_node.parent
+        while parent and !end_node_ancestors.include?(parent)
+          reference_node = reference_node.parent
+          parent = reference_node.parent
+        end
+        new_node = parent
+        new_offset = parent.children.index(reference_node) + 1
+      end
+
+      if first_partially_contained_child && first_partially_contained_child.replacable?
+
+        cloned = original_start_node.clone(0)
+        cloned.content = original_start_node.substring_data(original_start_offset, original_start_node.length - original_start_offset)
+        fragment << cloned
+        original_start_node.replace_data original_start_offset, original_start_node.length - original_start_offset, ''
+      elsif first_partially_contained_child
+        cloned = first_partially_contained_child.clone(0)
+        fragment << cloned
+        subrange = Range.new(original_start_node, original_start_offset, first_partially_contained_child, first_partially_contained_child.length)
+        subfragment = subrange.extract_contents
+        cloned << subfragment
+      end
+      contained_children.each do |contained_child|
+        fragment << contained_child
+      end
+      if last_partially_contained_child && last_partially_contained_child.replacable?
+
+        cloned = original_end_node.clone(0)
+        cloned.content = original_end_node.substring_data(0, original_end_offset)
+        fragment << cloned
+        original_end_node.replace_data 0, original_end_offset, ''
+      elsif last_partially_contained_child
+        cloned = last_partially_contained_child.clone(0)
+        fragment << cloned
+        subrange = Range.new(last_partially_contained_child, 0, original_end_node, original_end_offset)
+        subfragment = subrange.extract_contents
+        cloned << subfragment
+      end
+      @start_container = @end_container = new_node
+      @start_offset = @end_offset = new_offset
+      fragment
     end
 
     def clone_contents
