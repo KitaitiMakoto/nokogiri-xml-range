@@ -41,4 +41,12 @@ EOD
     end
     assert_false @child1.inclusive_ancestor? @child2
   end
+
+  def test_host_including_inclusive_ancestor?
+    fragment = Nokogiri::XML::DocumentFragment.new(@doc)
+    fragment.host = @parent
+    child = Nokogiri::XML::Element.new('child', @doc)
+    fragment << child
+    assert_true child.host_including_inclusive_ancestor? @root
+  end
 end
