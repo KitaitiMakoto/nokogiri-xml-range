@@ -26,9 +26,28 @@ module Nokogiri::XML
           end
         end
 
+        def inclusive_ancestors
+          [self] + ancestors
+        end
+
+        def inclusive_ancestor?(node)
+          inclusive_ancestors.include? node
+        end
+
+        def host_including_inclusive_ancestor?(node)
+          return true if inclusive_ancestor? node
+          root_node = ancestors.first
+          root_node.fragment? and
+            root_node.host.host_including_inclusive_ancestor?(node)
+        end
+
         def replacable?
           kind_of? Nokogiri::XML::Replacable
         end
+      end
+
+      refine DocumentFragment do
+        attr_accessor :host
       end
     end
   end
