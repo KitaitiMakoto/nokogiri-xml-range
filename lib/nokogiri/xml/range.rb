@@ -227,7 +227,7 @@ module Nokogiri::XML
       end
       last_partially_contained_child = nil
       unless @start_container.ancestors_to @end_container
-        last_partially_contained_child = common_ancestor.children.reverse.find {|child|
+        last_partially_contained_child = common_ancestor.children.reverse_each.find {|child|
           partially_contain_node? child
         }
       end
@@ -306,7 +306,7 @@ module Nokogiri::XML
       end
       last_partially_contained_child = nil
       unless ([@start_container] + @start_container.ancestors).include? @end_container
-        last_partially_contained_child = common_ancestor.children.reverse.find {|child|
+        last_partially_contained_child = common_ancestor.children.reverse_each.find {|child|
           partially_contain_node? child
         }
       end
