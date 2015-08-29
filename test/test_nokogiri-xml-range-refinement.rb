@@ -34,4 +34,11 @@ EOD
   def test_text_length
     assert_equal 7, @child1.children[0].length
   end
+
+  def test_inclusive_ancestor?
+    [@root, @parent, @child1].each do |node|
+      assert_true @child1.inclusive_ancestor? node
+    end
+    assert_false @child1.inclusive_ancestor? @child2
+  end
 end
