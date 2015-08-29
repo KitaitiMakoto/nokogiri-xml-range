@@ -1,6 +1,6 @@
 module Nokogiri::XML
   class Range
-    module Extension
+    module Refinement
       refine Node do
         def ancestors_to(node)
           nodes = NodeSet.new(document)

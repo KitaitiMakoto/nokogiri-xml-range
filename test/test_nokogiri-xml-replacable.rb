@@ -1,6 +1,6 @@
 require 'helper'
 require 'nokogiri'
-require 'nokogiri/xml/range/extension'
+require 'nokogiri/xml/range/refinement'
 require 'nokogiri/xml/replacable'
 
 class TestNokogiriXMLReplacable < Test::Unit::TestCase

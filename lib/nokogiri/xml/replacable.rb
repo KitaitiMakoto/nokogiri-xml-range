@@ -1,4 +1,4 @@
-using Nokogiri::XML::Range::Extension
+using Nokogiri::XML::Range::Refinement
 
 module Nokogiri::XML
   module Replacable

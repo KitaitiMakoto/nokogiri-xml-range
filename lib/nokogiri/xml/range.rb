@@ -1,10 +1,10 @@
 # coding: utf-8
 require 'nokogiri/xml/range/version'
 require 'nokogiri'
-require 'nokogiri/xml/range/extension'
+require 'nokogiri/xml/range/refinement'
 require 'nokogiri/xml/replacable'
 
-using Nokogiri::XML::Range::Extension
+using Nokogiri::XML::Range::Refinement
 
 module Nokogiri::XML
   class InvalidNodeTypeError < StandardError; end
