@@ -49,4 +49,12 @@ EOD
     fragment << child
     assert_true child.host_including_inclusive_ancestor? @root
   end
+
+  def test_split_text
+    text = @child1.child
+    split_result = text.split(5)
+
+    assert_equal ' 1', split_result.content
+    assert_equal 'child', text.content
+  end
 end
