@@ -26,6 +26,14 @@ module Nokogiri::XML
           end
         end
 
+        def following_node
+          child || next_sibling
+        end
+
+        def preceding_node
+          previous_sibling || parent
+        end
+
         def inclusive_ancestors
           [self] + ancestors
         end
