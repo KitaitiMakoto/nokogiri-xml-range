@@ -12,6 +12,7 @@ module Nokogiri::XML
   class NotSupportedError < StandardError; end
   class WrongDocumentError < StandardError; end
   class HierarchyRequestError < StandardError; end
+  class NotFoundError < StandardError; end
 
   class Range
     START_TO_START = 0

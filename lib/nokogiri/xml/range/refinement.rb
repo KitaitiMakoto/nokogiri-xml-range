@@ -52,6 +52,47 @@ module Nokogiri::XML
         def replacable?
           kind_of? Nokogiri::XML::Replacable
         end
+
+        def validate_pre_insertion(parent, child)
+          if [Node::DOCUMENT_TYPE_NODE, Node::DOCUMENT_FRAG_NODE, Node::ELEMENT_NODE].include? type
+            raise HierarchyRequestError
+          end
+          raise HierarchyRequestError if parent.host_including_inclusive_ancestor? self
+          raise NotFoundError if child and child.parent != parent
+          unless [Node::DOCUMENT_FRAG_NODE, Node::DOCUMENT_TYPE_NODE, Node::ELEMENT_NODE, Node::TEXT_NODE, Node::PI_NODE, Node::COMMENT_NODE].include? type
+            raise HierarchyRequestError
+          end
+          raise HierarchyRequestError if text? && document?
+          raise HierarchyRequestError if type == Node::DOCUMENT_TYPE_NODE and !parent.document?
+          return unless parent.document?
+          case type
+          when Node::DOCUMENT_FRAG_NODE
+            child_element_count = 0
+            children.each do |node|
+              raise HierarchyRequestError if node.text?
+              child_element_count += 1 if node.element?
+              raise HierarchyRequestError if child_element_count > 1
+            end
+            if child_element_count == 1
+              raise HierarchyRequestError if parent.children.any?(&:element?)
+              return unless child
+              raise HierarchyRequestError if child.type = Node::DOCUMENT_TYPE_NODE
+              raise HierarchyRequestError if child.following_node.type == Node::DOCUMENT_TYPE_NODE
+            end
+          when Node::ELEMENT_NODE
+            raise HierarchyRequestError if parent.children.any?(&:element?)
+            return unless child
+            raise HierarchyRequestError if child.type == Node::DOCUMENT_TYPE_NODE
+            raise HierarchyRequestError if child.following_node.type == Node::DOCUMENT_TYPE_NODE
+          when Node::DOCUMENT_TYPE_NODE
+            raise HierarchyRequestError if parent.children.any? {|node|
+              node.type == Node::DOCUMENT_TYPE_NODE
+            }
+            return unless child
+            raise HierarchyRequestError if child.preceding_node.element?
+            raise HierarchyRequestError if parent.children.any?(&:element?)
+          end
+        end
       end
 
       refine DocumentFragment do
