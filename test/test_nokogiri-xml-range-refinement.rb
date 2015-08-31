@@ -51,6 +51,8 @@ EOD
   end
 
   def test_split_text
+    pend
+
     text = @child1.child
     split_result = text.split(5)
 
