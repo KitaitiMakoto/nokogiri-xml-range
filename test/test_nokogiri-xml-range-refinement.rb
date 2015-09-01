@@ -59,4 +59,16 @@ EOD
     assert_equal ' 1', split_result.content
     assert_equal 'child', text.content
   end
+
+  def test_adopt
+    @doc.adopt @child1
+    assert_equal @doc, @child1.document
+
+    another_doc = Nokogiri.XML('<root><child/></root>')
+    elem = another_doc.search('root').first
+    @doc.adopt elem
+    assert_equal @doc, elem.document
+    assert_equal @doc, elem.child.document
+    assert_equal Nokogiri.XML('').to_s, another_doc.to_s
+  end
 end
