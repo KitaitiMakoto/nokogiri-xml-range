@@ -54,7 +54,7 @@ module Nokogiri::XML
         end
 
         def validate_pre_insertion(parent, child)
-          if [Node::DOCUMENT_TYPE_NODE, Node::DOCUMENT_FRAG_NODE, Node::ELEMENT_NODE].include? type
+          unless [Node::DOCUMENT_TYPE_NODE, Node::DOCUMENT_FRAG_NODE, Node::ELEMENT_NODE].include? parent.type
             raise HierarchyRequestError
           end
           raise HierarchyRequestError if parent.host_including_inclusive_ancestor? self
@@ -91,6 +91,19 @@ module Nokogiri::XML
             return unless child
             raise HierarchyRequestError if child.preceding_node.element?
             raise HierarchyRequestError if parent.children.any?(&:element?)
+          end
+        end
+      end
+
+      refine Document do
+        def adopt(node)
+          old_document = node.document
+          unless node.document == self
+            root << node
+            node.remove
+          end
+          if block_given?
+            yield node, old_document
           end
         end
       end
