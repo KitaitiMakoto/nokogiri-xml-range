@@ -50,16 +50,6 @@ EOD
     assert_true child.host_including_inclusive_ancestor? @root
   end
 
-  def test_split_text
-    pend
-
-    text = @child1.child
-    split_result = text.split(5)
-
-    assert_equal ' 1', split_result.content
-    assert_equal 'child', text.content
-  end
-
   def test_adopt
     @doc.adopt @child1
     assert_equal @doc, @child1.document
