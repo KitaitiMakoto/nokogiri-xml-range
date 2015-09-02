@@ -62,7 +62,7 @@ module Nokogiri::XML
           unless [Node::DOCUMENT_FRAG_NODE, Node::DOCUMENT_TYPE_NODE, Node::ELEMENT_NODE, Node::TEXT_NODE, Node::PI_NODE, Node::COMMENT_NODE].include? type
             raise HierarchyRequestError
           end
-          raise HierarchyRequestError if text? && document?
+          raise HierarchyRequestError if text? && parent.document?
           raise HierarchyRequestError if type == Node::DOCUMENT_TYPE_NODE and !parent.document?
           return unless parent.document?
           case type
