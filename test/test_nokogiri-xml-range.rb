@@ -232,4 +232,34 @@ CLONED
 
     assert_equal 'hild', cloned.to_s
   end
+
+  def test_insert_node_to_element
+    range = Nokogiri::XML::Range.new(@parent, 1, @parent, 3)
+    grand_child = Nokogiri::XML::Element.new('grand-child', @doc)
+    range.insert_node grand_child
+
+    assert_equal Nokogiri.XML(<<EOX).to_s, @doc.to_s
+<root>
+  <parent>
+    <grand-child/><child>child 1</child>
+    <child>child 2</child>
+  </parent>
+</root>
+EOX
+  end
+
+  def test_insert_node_to_text
+    range = Nokogiri::XML::Range.new(@child1.child, 5, @child1.child, 8)
+    text = Nokogiri::XML::Text.new('inserted', @doc)
+    range.insert_node text
+
+    assert_equal Nokogiri.XML(<<EOX).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>childinserted 1</child>
+    <child>child 2</child>
+  </parent>
+</root>
+EOX
+  end
 end
