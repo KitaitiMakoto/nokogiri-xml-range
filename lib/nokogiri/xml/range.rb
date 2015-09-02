@@ -354,6 +354,114 @@ module Nokogiri::XML
     end
 
     def insert_node(node)
+      if [Node::PI_NODE, Node::COMMENT_NODE].include?(@start_container.type) or
+        @start_container.text? && @start_container.parent.nil?
+        raise HierarchyRequestError
+      end
+      reference_node = nil
+      if @start_container.text?
+        reference_node = @start_container
+      else
+        reference_node = @start_container.children[@start_offset]
+      end
+      if reference_node
+        parent = reference_node.parent
+      else
+        parent = @start_container
+      end
+      node.validate_pre_insertion parent, reference_node
+      if @start_container.text?
+        #7 reference_node = @start_container.split()
+      end
+      # Nokogiri doesn't support serial text node,
+      # so we need to handle it ourselves
+      split_node = nil
+      if @start_container.text?
+        split_node = self.class.new(@start_container, @start_offset, @start_container, @start_container.length).extract_contents
+        reference_node = split_node
+      end
+      if node == reference_node
+        reference_node = node.next_sibling
+      end
+      if node.parent
+        node.remove
+      end
+      if reference_node
+        if split_node
+          @start_container.parent.children.index(@start_container) + 1
+        else
+          new_offset = reference_node.parent.children.index(reference_node)
+        end
+      else
+        new_offset = parent.length
+      end
+
+      # pre-insert
+      if split_node
+        # pre-insert validation node parent reference_node(@start_container or split_node)
+        unless [Node::DOCUMENT_NODE, Node::DOCUMENT_FRAG_NODE, Node::ELEMENT_NODE].include? parent.type
+          raise HierarchyRequestError
+        end
+        raise hierarchyrequesterror if parent.host_including_inclusive_ancestor? node
+        raise Hierarchyrequesterror if reference_node and @start_container.parent != parent
+        unless [Node::DOCUMENT_FRAG_NODE, Node::DOCUMENT_TYPE_NODE, Node::ELEMENT_NODE, Node::TEXT_NODE, Node::PI_NODE, Node::COMMENT_NODE].include? node.type
+          raise Hierarchyrequesterror
+        end
+        raise HierarchyRequestError if node.text? && parent.document?
+        raise HierarchyRequestError if node.type == Node::DOCUMENT_TYPE_NODE and !parent.document?
+        if parent.document?
+          case node.type
+          when Node::DOCUMENT_FRAG_NODE
+            child_element_count = 0
+            node.children.each do |n|
+              raise hierarchyrequesterror if n.text?
+              child_element_count += 1 if n.element?
+              raise Hierarchyrequesterror if child_element_count > 1
+            end
+            if child_element_count == 1
+              raise Hierarchyrequesterror if parent.children.any?(&:element?)
+              if reference_node
+                raise Hierarchyrequesterror if reference_node.type == Node::DOCUMENT_TYPE_NODE
+                raise Hierarchyrequesterror if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
+              end
+            end
+          when Node::ELEMENT_NODE
+            raise Hierarchyrequesterror if parent.children.any?(&:element?)
+            if reference_node
+              raise Hierarchyrequesterror if reference_node.child == Node::DOCUMENT_TYPE_NODE
+              raise Hierarchyrequesterror if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
+            end
+          when Node::DOCUMENT_TYPE_NODE
+            raise Hierarchyrequesterror if parent.children.any? {|n|
+              n.type == Node::DOCUMENT_TYPE_NODE
+            }
+            if reference_node
+              raise Hierarchyrequesterror if @start_container.preceding_node.element?
+              raise Hierarchyrequesterror if parent.children.any?(&:element?)
+            end
+          end
+        end
+
+        reference_child = @start_container
+        if reference_child == parent
+          reference_child = split_node
+        end
+        parent.document.adopt node
+        @start_container.after node
+        node.after split_node
+      else
+        node.validate_pre_insertion parent, reference_node
+        reference_child = reference_node
+        if reference_child == parent
+          reference_child = parent.next_sibling
+        end
+        parent.document.adopt node
+        reference_child.before node
+      end
+
+      if collapsed?
+        @end_container, @end_offset = parent, new_offset
+      end
     end
 
     def surround_contents(new_parent)
