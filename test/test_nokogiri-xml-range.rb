@@ -262,4 +262,19 @@ EOX
 </root>
 EOX
   end
+
+  def test_surround_contents
+    range = Nokogiri::XML::Range.new(@child1.child, 6, @child1.child, 7)
+    number = Nokogiri::XML::Element.new('number', @doc)
+    range.surround_contents number
+
+    assert_equal Nokogiri.XML(<<EOX).to_s, @doc.to_s
+<root>
+  <parent>
+    <child>child <number>1</number></child>
+    <child>child 2</child>
+  </parent>
+</root>
+EOX
+  end
 end
