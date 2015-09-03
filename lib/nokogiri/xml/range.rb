@@ -13,6 +13,7 @@ module Nokogiri::XML
   class WrongDocumentError < StandardError; end
   class HierarchyRequestError < StandardError; end
   class NotFoundError < StandardError; end
+  class InvalidStateError < StandardError; end
 
   class Range
     START_TO_START = 0
@@ -465,6 +466,13 @@ module Nokogiri::XML
     end
 
     def surround_contents(new_parent)
+      raise InvalidStateError unless partially_containing_nodes.all?(&:text?)
+      raise InvalidNodeTypeError if [Node::DOCUMENT_NODE, Node::DOCUMENT_TYPE_NODE, Node::DOCUMENT_FRAG_NODE].include? new_parent.type
+      fragment = extract_contents
+      new_parent.replace_all_with nil if new_parent.child
+      insert_node new_parent
+      new_parent << fragment
+      select_node new_parent
     end
 
     def clone_range
@@ -486,6 +494,13 @@ module Nokogiri::XML
     end
     alias partially_include_node? partially_contain_node?
     alias partially_cover_node? partially_contain_node?
+
+    def partially_containing_nodes
+      inclusive_ancestors_of_start = @start_container.inclusive_ancestors
+      inclusive_ancestors_of_end = @end_container.inclusive_ancestors
+      (inclusive_ancestors_of_start | inclusive_ancestors_of_end) -
+        (inclusive_ancestors_of_start & inclusive_ancestors_of_end)
+    end
 
     def point_in_range?(node, offset)
     end

@@ -49,6 +49,14 @@ module Nokogiri::XML
             root_node.host.host_including_inclusive_ancestor?(node)
         end
 
+        def replace_all_with(node)
+          document.adopt node if node
+          children.each &:remove
+          if node
+            add_child node
+          end
+        end
+
         def replacable?
           kind_of? Nokogiri::XML::Replacable
         end
