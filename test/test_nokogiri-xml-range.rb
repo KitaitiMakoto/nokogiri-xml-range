@@ -284,4 +284,12 @@ EOX
     assert_true range.point_in_range? @child2, 0
     assert_true range.point_in_range? @child1.child, 3
   end
+
+  def test_compare_point
+    range = Nokogiri::XML::Range.new(@child1.child, 2, @parent, 4)
+
+    assert_equal -1, range.compare_point(@parent, 0)
+    assert_equal 0, range.compare_point(@child2, 0)
+    assert_equal 1, range.compare_point(@root, 2)
+  end
 end
