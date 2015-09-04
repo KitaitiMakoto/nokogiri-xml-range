@@ -518,6 +518,13 @@ module Nokogiri::XML
     end
 
     def intersect_node?(node)
+      return false unless node.ancestors.last == @start_container.ancestors.last
+      return true unless node.respond_to?(:parent)
+      parent = node.parent
+      return true unless parent
+      offset = parent.children.index(node)
+      (self.class.compare_points(parent, offset, @end_container, @end_offset) == -1) and
+        (self.class.compare_points(parent, offset + 1, @start_container, @start_offset) == 1)
     end
 
     def to_s
