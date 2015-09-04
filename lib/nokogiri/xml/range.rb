@@ -500,6 +500,12 @@ module Nokogiri::XML
     end
 
     def point_in_range?(node, offset)
+      return false unless node.ancestors.last == @start_container.ancestors.last
+      raise InvalidNodeTypeError if node.type == Node::DOCUMENT_TYPE_NODE
+      raise IndexSizeError if offset > node.length
+      return false if self.class.compare_points(node, offset, @start_container, @start_offset) == -1
+      return false if self.class.compare_points(node, offset, @end_container, @end_offset) == 1
+      true
     end
 
     def compare_point(node, offset)
