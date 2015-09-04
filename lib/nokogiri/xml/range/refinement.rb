@@ -44,7 +44,7 @@ module Nokogiri::XML
 
         def host_including_inclusive_ancestor?(node)
           return true if inclusive_ancestor? node
-          root_node = ancestors.first
+          root_node = ancestors.last
           root_node.fragment? and
             root_node.host.host_including_inclusive_ancestor?(node)
         end
