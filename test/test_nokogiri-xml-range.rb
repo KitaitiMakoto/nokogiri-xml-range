@@ -277,4 +277,11 @@ EOX
 </root>
 EOX
   end
+
+  def test_point_in_range?
+    range = Nokogiri::XML::Range.new(@child1.child, 2, @parent, 4)
+
+    assert_true range.point_in_range? @child2, 0
+    assert_true range.point_in_range? @child1.child, 3
+  end
 end
