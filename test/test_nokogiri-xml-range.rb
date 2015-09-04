@@ -292,4 +292,10 @@ EOX
     assert_equal 0, range.compare_point(@child2, 0)
     assert_equal 1, range.compare_point(@root, 2)
   end
+
+  def test_intersect_node?
+    range = Nokogiri::XML::Range.new(@child1.child, 2, @parent, 4)
+
+    assert_true range.intersect_node? @child1.child
+  end
 end
