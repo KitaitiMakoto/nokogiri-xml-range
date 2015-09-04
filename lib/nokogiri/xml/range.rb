@@ -475,9 +475,6 @@ module Nokogiri::XML
       select_node new_parent
     end
 
-    def clone_range
-    end
-
     def contain_node?(node)
       document == node.document and
         self.class.compare_points(node, 0, @start_container, @start_offset) == 1 and
