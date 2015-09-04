@@ -509,6 +509,12 @@ module Nokogiri::XML
     end
 
     def compare_point(node, offset)
+      raise WrongDocumentError unless node.ancestors.last == @start_container.ancestors.last
+      raise InvalidNodeTypeError if node.type == Node::DOCUMENT_TYPE_NODE
+      raise IndexSizeError if offset > node.length
+      return -1 if self.class.compare_points(node, offset, @start_container, @start_offset) == -1
+      return 1 if self.class.compare_points(node, offset, @end_container, @end_offset) == 1
+      0
     end
 
     def intersect_node?(node)
