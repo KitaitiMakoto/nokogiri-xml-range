@@ -33,7 +33,106 @@ Features
 Examples
 --------
 
+### Initialization ###
+
     require 'nokogiri/xml/range'
+    
+    doc = Nokogiri.XML(<<EOX)
+    <root>
+      <parent>
+        <child>child 1</child>
+        <child>child 2</child>
+      </parent>
+    </root>
+    EOX
+    parent = doc.search('parent')[0]
+    child1 = doc.search('child')[0]
+    child2 = doc.search('child')[1]
+    child1_text = child1.child
+    child2_text = child2.child
+    # Initialize range with nodes and offsets of start and end point
+    range = Nokogiri::XML::Range.new(child1_text, 0, child2_text, 5)
+    # This range expresses `child 1</child>\n        <child>child`
+
+### Deleting contents ###
+
+    range.delete_contents
+    puts doc
+    # <?xml version="1.0"?>
+    # <root>
+    #   <parent>
+    #     <child></child><child> 2</child>
+    #   </parent>
+    # </root>
+
+### Extracting contents ###
+
+`Nokogiri::XML::Range#extract_contents` remove the range from DOM tree and returns contents in the range.
+
+    extracted = range.extract_contents
+    # => #(DocumentFragment:0x3fa87891eaa0 {
+    #   name = "#document-fragment",
+    #   children = [
+    #     #(Element:0x3fa87891e12c { name = "child", children = [ #(Text "child 1")] }),
+    #     #(Text "\n        "),
+    #     #(Element:0x3fa8789177f0 { name = "child", children = [ #(Text "child")] })]
+    #   })
+    puts doc
+    # <?xml version="1.0"?>
+    # <root>
+    #   <parent>
+    #     <child></child><child> 2</child>
+    #   </parent>
+    # </root>
+    puts extracted
+    # <child>child 1</child>
+    #     <child>child</child>
+
+### Cloning contents ###
+
+    cloned = range.clone_contents
+    # => #(DocumentFragment:0x3fa87809fb90 {
+    #   name = "#document-fragment",
+    #   children = [
+    #     #(Element:0x3fa87809e394 { name = "child", children = [ #(Text "child 1")] }),
+    #     #(Text "\n        "),
+    #     #(Element:0x3fa87808dcd8 { name = "child", children = [ #(Text "child")] })]
+    #   })
+    puts cloned
+    # <child>child 1</child>
+    #     <child>child</child>
+
+`Nokogiri::XML::Range#clone_contents` doesn't affect original DOM tree.
+
+### Inserting node ###
+
+`Nokogiri::XML::Range#insert_node` inserts a node just before the range start point.
+
+    text = Nokogiri::XML::Text.new('inserted', doc)
+    # => #(Text "inserted")
+    range.insert_node text
+    puts doc
+    # <?xml version="1.0"?>
+    # <root>
+    #   <parent>
+    #     <child>insertedchild 1</child>
+    #     <child>child 2</child>
+    #   </parent>
+    # </root>
+
+### Surrounding range contents ###
+
+    range = Nokogiri::XML::Range.new(child1_text, 6, child1_text, 7)
+    number = Nokogiri::XML::Element.new('number', doc)
+    range.surround_contents number
+    puts doc
+    # <?xml version="1.0"?>
+    # <root>
+    #   <parent>
+    #     <child>child <number>1</number></child>
+    #     <child>child 2</child>
+    #   </parent>
+    # </root>
 
 Requirements
 ------------
