@@ -21,6 +21,15 @@ Description
 Features
 --------
 
+`Nokogiri::XML::Range` expresses a range on DOM tree. It can:
+
+* test a node is in the range or not,
+* delete contents the range expresses from DOM tree,
+* extract contents alike,
+* clone contents alike,
+* surround the range by specified DOM element,
+* and so on...
+
 Examples
 --------
 
