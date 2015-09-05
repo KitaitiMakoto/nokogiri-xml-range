@@ -298,4 +298,19 @@ EOX
 
     assert_true range.intersect_node? @child1.child
   end
+
+  def test_to_s
+    assert_equal 'hild', Nokogiri::XML::Range.new(@child1.child, 1, @child1.child, 5).to_s
+    assert_equal <<EOS.chomp, Nokogiri::XML::Range.new(@root, 0, @root, 2).to_s
+
+  
+    child 1
+    child 2
+  
+EOS
+    assert_equal <<EOS.chomp, Nokogiri::XML::Range.new(@parent, 1, @child2.child, 5).to_s
+child 1
+    child
+EOS
+  end
 end
