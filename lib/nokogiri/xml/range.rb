@@ -179,7 +179,7 @@ module Nokogiri::XML
 
       nodes_to_remove = NodeSet.new(document)
       common_ancestor = common_ancestor_container
-      select_containing_node common_ancestor, nodes_to_remove
+      select_containing_children common_ancestor, nodes_to_remove
 
       if @end_container.ancestors_to @start_container
         new_node, new_offset = @start_container, @start_offset
@@ -539,12 +539,12 @@ module Nokogiri::XML
 
     # @note depth first order
     # @note modifies +node_set+
-    def select_containing_node(node, node_set)
+    def select_containing_children(node, node_set)
       if contain_node?(node)
         node_set << node
       else
         node.children.each do |child|
-          select_containing_node child, node_set
+          select_containing_children child, node_set
         end
       end
     end
