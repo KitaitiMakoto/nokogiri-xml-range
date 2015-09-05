@@ -8,10 +8,10 @@ Nokogiri::XML::Range
 * [Documentation](http://rubydoc.info/gems/nokogiri-xml-range)
 * [Email](mailto:KitaitiMakoto at gmail.com)
 
+DOM Range implementation on Nokogiri
+
 Description
 -----------
-
-TODO: Description
 
 Features
 --------

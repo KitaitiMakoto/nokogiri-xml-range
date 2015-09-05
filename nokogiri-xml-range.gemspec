@@ -5,7 +5,7 @@ require File.expand_path('../lib/nokogiri/xml/range/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = "Nokogiri::XML::Range"
   gem.version       = Nokogiri::XML::Range::VERSION
-  gem.summary       = %q{TODO: Summary}
+  gem.summary       = %q{DOM Range implementation on Nokogiri}
   gem.description   = %q{TODO: Description}
   gem.license       = "LGPL"
   gem.authors       = ["KITAITI Makoto"]
