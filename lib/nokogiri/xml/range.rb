@@ -483,6 +483,13 @@ module Nokogiri::XML
     alias include_node? contain_node?
     alias cover_node? contain_node?
 
+    def containing_nodes
+      nodes = NodeSet.new(document)
+      select_containing_nodes common_ancestor_container, nodes
+
+      nodes
+    end
+
     def partially_contain_node?(node)
       path_to_start = @start_container.ancestors_to(node)
       path_to_end = @end_container.ancestors_to(node)
@@ -528,6 +535,21 @@ module Nokogiri::XML
     end
 
     def to_s
+      s = ''
+      if @start_container == @end_container and @start_container.text?
+        return @start_container.substring_data(@start_offset, @end_offset - @start_offset)
+      end
+      if @start_container.text?
+        s << @start_container.substring_data(@start_offset, @start_container.length)
+      end
+      containing_nodes.reduce s do |concatenated, node|
+        concatenated << node.content if node.text?
+        concatenated
+      end
+      if @end_container.text?
+        s << @end_container.substring_data(0, @end_offset)
+      end
+      s
     end
 
     private
@@ -546,6 +568,15 @@ module Nokogiri::XML
         node.children.each do |child|
           select_containing_children child, node_set
         end
+      end
+    end
+
+    # @note depth first order
+    # @note modifies +node_set+
+    def select_containing_nodes(node, node_set)
+      node_set << node if contain_node?(node)
+      node.children.each do |child|
+        select_containing_nodes child, node_set
       end
     end
   end
