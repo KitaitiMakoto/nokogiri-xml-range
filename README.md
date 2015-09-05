@@ -13,6 +13,11 @@ DOM Range implementation on Nokogiri
 Description
 -----------
 
+[Nokogiri][] DOM Range Implementatin based on [DOM Standard specification][range spec].
+
+[Nokogiri]: http://www.nokogiri.org/
+[range spec]: https://dom.spec.whatwg.org/#ranges
+
 Features
 --------
 

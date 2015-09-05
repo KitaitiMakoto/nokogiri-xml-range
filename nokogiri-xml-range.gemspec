@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.name          = "Nokogiri::XML::Range"
   gem.version       = Nokogiri::XML::Range::VERSION
   gem.summary       = %q{DOM Range implementation on Nokogiri}
-  gem.description   = %q{TODO: Description}
+  gem.description   = %q{Nokogiri DOM Range Implementatin based on DOM Standard specification.}
   gem.license       = "LGPL"
   gem.authors       = ["KITAITI Makoto"]
   gem.email         = "KitaitiMakoto@gmail.com"
