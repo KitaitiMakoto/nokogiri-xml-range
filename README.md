@@ -1,5 +1,5 @@
-nokogiri-xml-range
-==================
+Nokogiri::XML::Range
+====================
 
 [![Build Status](https://travis-ci.org/KitaitiMakoto/nokogiri-xml-range.svg?branch=master)](https://travis-ci.org/KitaitiMakoto/nokogiri-xml-range)
 [![Coverage Status](https://coveralls.io/repos/KitaitiMakoto/nokogiri-xml-range/badge.svg?branch=master&service=github)](https://coveralls.io/github/KitaitiMakoto/nokogiri-xml-range?branch=master)

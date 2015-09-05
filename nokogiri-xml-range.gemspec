@@ -3,7 +3,7 @@
 require File.expand_path('../lib/nokogiri/xml/range/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.name          = "nokogiri-xml-range"
+  gem.name          = "Nokogiri::XML::Range"
   gem.version       = Nokogiri::XML::Range::VERSION
   gem.summary       = %q{TODO: Summary}
   gem.description   = %q{TODO: Description}
