@@ -415,30 +415,30 @@ module Nokogiri::XML
           when Node::DOCUMENT_FRAG_NODE
             child_element_count = 0
             node.children.each do |n|
-              raise hierarchyrequesterror if n.text?
+              raise HierarchyRequestError if n.text?
               child_element_count += 1 if n.element?
-              raise Hierarchyrequesterror if child_element_count > 1
+              raise HierarchyRequestError if child_element_count > 1
             end
             if child_element_count == 1
-              raise Hierarchyrequesterror if parent.children.any?(&:element?)
+              raise HierarchyRequestError if parent.children.any?(&:element?)
               if reference_node
-                raise Hierarchyrequesterror if reference_node.type == Node::DOCUMENT_TYPE_NODE
-                raise Hierarchyrequesterror if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
+                raise HierarchyRequestError if reference_node.type == Node::DOCUMENT_TYPE_NODE
+                raise HierarchyRequestError if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
               end
             end
           when Node::ELEMENT_NODE
-            raise Hierarchyrequesterror if parent.children.any?(&:element?)
+            raise HierarchyRequestError if parent.children.any?(&:element?)
             if reference_node
-              raise Hierarchyrequesterror if reference_node.child == Node::DOCUMENT_TYPE_NODE
-              raise Hierarchyrequesterror if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
+              raise HierarchyRequestError if reference_node.child == Node::DOCUMENT_TYPE_NODE
+              raise HierarchyRequestError if @start_container.following_node.type == Node::DOCUMENT_TYPE_NODE
             end
           when Node::DOCUMENT_TYPE_NODE
-            raise Hierarchyrequesterror if parent.children.any? {|n|
+            raise HierarchyRequestError if parent.children.any? {|n|
               n.type == Node::DOCUMENT_TYPE_NODE
             }
             if reference_node
-              raise Hierarchyrequesterror if @start_container.preceding_node.element?
-              raise Hierarchyrequesterror if parent.children.any?(&:element?)
+              raise HierarchyRequestError if @start_container.preceding_node.element?
+              raise HierarchyRequestError if parent.children.any?(&:element?)
             end
           end
         end
