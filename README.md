@@ -147,6 +147,14 @@ Install
 
     $ gem install nokogiri-xml-range
 
+Todos
+-----
+
+* Helpful error messages
+* C0 coverage 100%
+* More test cases from use cases in the wild
+* Performance optimization, especially caching
+
 Copyright
 ---------
 
