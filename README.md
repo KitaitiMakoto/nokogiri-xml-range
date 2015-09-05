@@ -38,6 +38,11 @@ Examples
 Requirements
 ------------
 
+* Ruby 2.1.0 or later
+* Nokogiri gem
+* C compiler like gcc to install Nokogiri gem
+* `patch` command to install Nokogiri gem
+
 Install
 -------
 
