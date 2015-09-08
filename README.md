@@ -57,6 +57,13 @@ Examples
     range = Nokogiri::XML::Range.new(child1_text, 0, child2_text, 5)
 
     # This range expresses `child 1</child>\n        <child>child`
+    # Pseudoly expressed as:
+    # <root>
+    #   <parent>
+    #     <child>[**START POINT**]child 1</child>
+    #     <child>child[**END POINT**] 2</child>
+    #   </parent>
+    # </root>
 
 ### Deleting contents ###
 
