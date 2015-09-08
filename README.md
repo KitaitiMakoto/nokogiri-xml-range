@@ -52,8 +52,10 @@ Examples
     child2 = doc.search('child')[1]
     child1_text = child1.child
     child2_text = child2.child
+
     # Initialize range with nodes and offsets of start and end point
     range = Nokogiri::XML::Range.new(child1_text, 0, child2_text, 5)
+
     # This range expresses `child 1</child>\n        <child>child`
 
 ### Deleting contents ###
