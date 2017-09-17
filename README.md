@@ -5,9 +5,9 @@ Nokogiri::XML::Range
 [![coverage report](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/badges/master/coverage.svg)](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/commits/master)
 [![Gem Version](https://badge.fury.io/rb/nokogiri-xml-range.svg)](http://badge.fury.io/rb/nokogiri-xml-range)
 
-* [Homepage](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
+* [Homepage](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range)
 * [Documentation](http://rubydoc.info/gems/nokogiri-xml-range)
-* [Source code](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
+* [Source code](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range)
 * [Email](mailto:KitaitiMakoto at gmail.com)
 
 DOM Range implementation on Nokogiri
