@@ -1,8 +1,8 @@
 Nokogiri::XML::Range
 ====================
 
-[![Build Status](https://travis-ci.org/KitaitiMakoto/nokogiri-xml-range.svg?branch=master)](https://travis-ci.org/KitaitiMakoto/nokogiri-xml-range)
-[![Coverage Status](https://coveralls.io/repos/KitaitiMakoto/nokogiri-xml-range/badge.svg?branch=master&service=github)](https://coveralls.io/github/KitaitiMakoto/nokogiri-xml-range?branch=master)
+[![pipeline status](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/badges/master/pipeline.svg)](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/commits/master)
+[![coverage report](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/badges/master/coverage.svg)](https://gitlab.com/KitaitiMakoto/nokogiri-xml-range/commits/master)
 [![Gem Version](https://badge.fury.io/rb/nokogiri-xml-range.svg)](http://badge.fury.io/rb/nokogiri-xml-range)
 
 * [Homepage](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
