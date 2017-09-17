@@ -1,6 +1,6 @@
 before_script:
   - gem install --no-document bundler
-  - bundle install --jobs=$(nproc)
+  - bundle install --jobs=$(nproc) --path=deps
 
 test:2.2:
   image: ruby:2.2
