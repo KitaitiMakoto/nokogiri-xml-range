@@ -1,7 +1,4 @@
 doc/
 pkg/
-.bundle/
 .yardoc/
-Gemfile.lock
 coverage/
-deps/
