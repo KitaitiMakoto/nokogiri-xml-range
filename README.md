@@ -7,7 +7,7 @@ Nokogiri::XML::Range
 
 * [Homepage](https://rubygems.org/gems/nokogiri-xml-range)
 * [Documentation](http://rubydoc.info/gems/nokogiri-xml-range)
-* [Source code](https://github.com/KitaitiMakoto/nokogiri-xml-range)
+* [Source code](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
 * [Email](mailto:KitaitiMakoto at gmail.com)
 
 DOM Range implementation on Nokogiri
