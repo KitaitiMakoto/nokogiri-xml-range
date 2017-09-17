@@ -1,0 +1,18 @@
+before_script:
+  - gem install --no-document bundler
+  - bundle install --jobs=$(nproc)
+
+test:2.2:
+  image: ruby:2.2
+  script:
+    - bundle exec rake test
+
+test:2.3:
+  image: ruby:2.3
+  script:
+    - bundle exec rake test
+
+test:2.4:
+  image: ruby:2.4
+  script:
+    - bundle exec rake test
