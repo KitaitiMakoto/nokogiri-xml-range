@@ -5,7 +5,7 @@ Nokogiri::XML::Range
 [![Coverage Status](https://coveralls.io/repos/KitaitiMakoto/nokogiri-xml-range/badge.svg?branch=master&service=github)](https://coveralls.io/github/KitaitiMakoto/nokogiri-xml-range?branch=master)
 [![Gem Version](https://badge.fury.io/rb/nokogiri-xml-range.svg)](http://badge.fury.io/rb/nokogiri-xml-range)
 
-* [Homepage](https://rubygems.org/gems/nokogiri-xml-range)
+* [Homepage](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
 * [Documentation](http://rubydoc.info/gems/nokogiri-xml-range)
 * [Source code](https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range)
 * [Email](mailto:KitaitiMakoto at gmail.com)

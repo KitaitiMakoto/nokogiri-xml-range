@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.license       = "LGPL"
   gem.authors       = ["KITAITI Makoto"]
   gem.email         = "KitaitiMakoto@gmail.com"
-  gem.homepage      = "http://www.rubydoc.info/gems/nokogiri-xml-range"
+  gem.homepage      = "https://gitlabb.com/KitaitiMakoto/nokogiri-xml-range"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
