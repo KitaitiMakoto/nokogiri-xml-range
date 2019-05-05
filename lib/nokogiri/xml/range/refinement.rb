@@ -58,7 +58,7 @@ module Nokogiri::XML
         end
 
         def replacable?
-          kind_of? Nokogiri::XML::Replacable
+          kind_of?(CharacterData) || kind_of?(ProcessingInstruction)
         end
 
         def validate_pre_insertion(parent, child)
