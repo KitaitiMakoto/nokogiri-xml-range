@@ -1,7 +1,6 @@
 require 'helper'
 require 'nokogiri'
 require 'nokogiri/xml/range/refinement'
-require 'nokogiri/xml/replacable'
 
 class TestNokogiriXMLRangeRefinement < Test::Unit::TestCase
   using Nokogiri::XML::Range::Refinement

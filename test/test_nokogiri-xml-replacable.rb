@@ -1,9 +1,10 @@
 require 'helper'
 require 'nokogiri'
 require 'nokogiri/xml/range/refinement'
-require 'nokogiri/xml/replacable'
 
 class TestNokogiriXMLReplacable < Test::Unit::TestCase
+  using Nokogiri::XML::Range::Refinement
+
   def setup
     @doc = Nokogiri::XML::Document.new
     @text = Nokogiri::XML::Text.new('Hello, world.', @doc)
