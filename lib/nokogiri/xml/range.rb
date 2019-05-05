@@ -6,15 +6,15 @@ require 'nokogiri/xml/range/refinement'
 using Nokogiri::XML::Range::Refinement
 
 module Nokogiri::XML
-  class InvalidNodeTypeError < StandardError; end
-  class IndexSizeError < StandardError; end
-  class NotSupportedError < StandardError; end
-  class WrongDocumentError < StandardError; end
-  class HierarchyRequestError < StandardError; end
-  class NotFoundError < StandardError; end
-  class InvalidStateError < StandardError; end
-
   class Range
+    class InvalidNodeTypeError < StandardError; end
+    class IndexSizeError < StandardError; end
+    class NotSupportedError < StandardError; end
+    class WrongDocumentError < StandardError; end
+    class HierarchyRequestError < StandardError; end
+    class NotFoundError < StandardError; end
+    class InvalidStateError < StandardError; end
+
     START_TO_START = 0
     START_TO_END = 1
     END_TO_END = 2
