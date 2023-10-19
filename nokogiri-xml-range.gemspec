@@ -24,6 +24,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rubygems-tasks'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'pry'
   gem.add_development_dependency 'simplecov'
 end

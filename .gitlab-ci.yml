@@ -1,5 +1,5 @@
 before_script:
-  - gem install --no-document nokogiri test-unit test-unit-notify rubygems-tasks yard rake pry simplecov
+  - gem install --no-document nokogiri test-unit test-unit-notify rubygems-tasks yard rake simplecov
 
 test:2.4:
   image: ruby:2.4
