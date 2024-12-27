@@ -1,11 +1,6 @@
 before_script:
   - gem install --no-document nokogiri test-unit test-unit-notify rubygems-tasks yard rake simplecov
 
-test:2.7:
-  image: ruby:2.7
-  script:
-    - rake test
-
 test:3.0:
   image: ruby:3.0
   script:
